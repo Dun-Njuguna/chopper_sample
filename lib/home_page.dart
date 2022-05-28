@@ -17,8 +17,9 @@ class HomePage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () async {
-            final response = await Provider.of<PostApiService>(context, listen: false)
-                .postPost({'key': 'value'});
+            final response =
+                await Provider.of<PostApiService>(context, listen: false)
+                    .postPost({'key': 'value'});
             if (kDebugMode) {
               print(response.body);
             }
@@ -35,12 +36,17 @@ class HomePage extends StatelessWidget {
     return FutureBuilder<Response>(
       future: Provider.of<PostApiService>(context).getPostts(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error.toString()),
+            );
+          }
           final list = json.decode(snapshot.data?.bodyString ?? " ");
           return _buildPosts(context, list);
-        } else {
-          return const Center(child: CircularProgressIndicator());
         }
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

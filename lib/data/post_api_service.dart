@@ -21,6 +21,9 @@ abstract class PostApiService extends ChopperService {
       services: [
         _$PostApiService(),
       ],
+      interceptors: [
+       HttpLoggingInterceptor(),
+      ],
       converter: const JsonConverter(),
     );
     return _$PostApiService(client);
